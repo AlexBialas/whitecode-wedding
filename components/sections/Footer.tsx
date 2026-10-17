@@ -1,106 +1,69 @@
-import { Heart } from "lucide-react";
-import { wedding } from "@/data/wedding";
+"use client";
 
+import { ArrowUpRight, Heart } from "lucide-react";
+
+import { wedding } from "@/data/wedding";
 import Container from "@/components/ui/Container";
 import Reveal from "@/components/ui/Reveal";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0E0E0E] py-32 text-white">
+    <footer className="relative overflow-hidden bg-[#302820] text-[#F8F4EC]">
+      {/* Subtelne światło w tle */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[700px] -translate-x-1/2 rounded-full bg-[#B49A75]/[0.07] blur-[130px]"
+      />
+
       <Container>
-        <Reveal>
-          <div className="text-center">
-            <p className="text-[11px] uppercase tracking-[0.55em] text-white/40">
-              DZIĘKUJEMY
-            </p>
-
-            <h2 className="mt-10 font-heading text-6xl font-light md:text-8xl">
-              {wedding.bride}
-            </h2>
-
-            <div className="my-8 text-4xl text-[#C8A97E]">&</div>
-
-            <h2 className="font-heading text-6xl font-light md:text-8xl">
-              {wedding.groom}
-            </h2>
-
-            <div className="mx-auto mt-12 h-px w-24 bg-[#C8A97E]" />
-
-            <p className="mt-10 uppercase tracking-[0.35em] text-white/60">
-              {wedding.weddingDate}
-            </p>
-
-            <p className="mx-auto mt-8 max-w-2xl leading-8 text-white/60">
-              Dziękujemy, że byliście częścią naszego wyjątkowego dnia. Wasza
-              obecność była dla nas najpiękniejszym prezentem i stworzyła
-              wspomnienia, które pozostaną z nami na całe życie.
-            </p>
-
-            <Heart
-              size={34}
-              strokeWidth={1.5}
-              className="mx-auto mt-12 text-[#C8A97E]"
-            />
-          </div>
-        </Reveal>
-
-        {/* WhiteCode */}
-
-        <Reveal delay={0.25}>
-          <div className="mt-28 border-t border-white/10 pt-12 text-center">
-            <p className="text-[11px] uppercase tracking-[0.55em] text-white/35">
-              Projekt i realizacja
-            </p>
-
-            <h3 className="mt-6 font-heading text-3xl font-light">
-              The WhiteCode Studio
-            </h3>
-
-            <p className="mt-2 text-white/50">Aleksandra Białas</p>
-
-            <p className="mt-8 text-sm leading-7 text-white/35">
-              Nowoczesne strony internetowe • Wedding Landing Pages
-              <br />
-              Automatyzacje AI • Aplikacje Webowe
-            </p>
-
-            <div className="mt-10 flex flex-wrap justify-center gap-8 text-sm text-white/50">
+        {/* The WhiteCode Studio */}
+        <Reveal delay={0.12}>
+          <div className="relative border-t border-[#D8CBBB]/15 py-9 sm:py-11">
+            <div className="flex flex-col items-center justify-between gap-8 md:flex-row md:gap-10">
               <a
-                href="https://whitecode.studio"
+                href="#"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="transition hover:text-[#C8A97E]"
+                aria-label="The WhiteCode Studio — otwórz stronę"
+                className="group text-center md:text-left"
               >
-                WhiteCode Studio
+                <p className="text-[8px] uppercase tracking-[0.35em] text-[#C5AD8B]/75">
+                  DESIGN & DEVELOPMENT
+                </p>
+
+                <span className="mt-3 inline-flex items-center gap-2 font-heading text-2xl font-light tracking-[-0.025em] text-[#F8F4EC] transition-colors duration-300 group-hover:text-[#C5AD8B] sm:text-3xl">
+                  The WhiteCode Studio
+                  <ArrowUpRight
+                    size={15}
+                    strokeWidth={1.2}
+                    className="text-[#C5AD8B] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  />
+                </span>
+
+                <p className="mt-2 text-xs text-[#D8CBBB]/55">
+                  Created by Aleksandra Białas
+                </p>
               </a>
 
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition hover:text-[#C8A97E]"
-              >
-                Instagram
-              </a>
-
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition hover:text-[#C8A97E]"
-              >
-                LinkedIn
-              </a>
+              {/* Linki */}
+              <nav
+                aria-label="Linki do The WhiteCode Studio"
+                className="flex flex-wrap items-center justify-center gap-x-7 gap-y-4 text-[10px] uppercase tracking-[0.16em] text-[#D8CBBB]/65 sm:gap-x-9"
+              ></nav>
             </div>
-
-            <div className="mx-auto mt-10 h-px w-20 bg-white/10" />
-
-            <p className="mt-8 text-xs tracking-wider text-white/25">
-              © {new Date().getFullYear()} The WhiteCode Studio The WhiteCode
-              Studio • All Rights Reserved
-            </p>
           </div>
         </Reveal>
+
+        {/* Dolna linia */}
+        <div className="relative flex flex-col items-center justify-between gap-3 border-t border-[#D8CBBB]/10 py-6 text-center sm:flex-row sm:text-left">
+          <p className="text-[9px] tracking-[0.12em] text-[#D8CBBB]/40">
+            © {new Date().getFullYear()} The WhiteCode Studio
+          </p>
+
+          <p className="text-[9px] tracking-[0.12em] text-[#D8CBBB]/40">
+            Made with love <span className="text-[#C5AD8B]">♥</span>
+          </p>
+        </div>
       </Container>
     </footer>
   );

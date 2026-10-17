@@ -10,29 +10,36 @@ type Countdown = {
 };
 
 export function useCountdown(targetDate: string): Countdown | null {
-  const calculate = (): Countdown | null => {
-    const difference = new Date(targetDate).getTime() - Date.now();
-
-    if (difference <= 0) {
-      return null;
-    }
-
-    return {
-      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-      minutes: Math.floor((difference / (1000 * 60)) % 60),
-      seconds: Math.floor((difference / 1000) % 60),
-    };
-  };
-
-  const [countdown, setCountdown] = useState<Countdown | null>(calculate());
+  const [countdown, setCountdown] = useState<Countdown | null>(null);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCountdown(calculate());
-    }, 1000);
+    const calculate = (): Countdown | null => {
+      const difference = new Date(targetDate).getTime() - Date.now();
 
-    return () => clearInterval(interval);
+      if (difference <= 0) {
+        return null;
+      }
+
+      return {
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((difference / (1000 * 60)) % 60),
+        seconds: Math.floor((difference / 1000) % 60),
+      };
+    };
+
+    // Pierwsze obliczenie dopiero po zamontowaniu komponentu.
+    const updateCountdown = () => {
+      setCountdown(calculate());
+    };
+
+    updateCountdown();
+
+    const interval = window.setInterval(updateCountdown, 1000);
+
+    return () => {
+      window.clearInterval(interval);
+    };
   }, [targetDate]);
 
   return countdown;

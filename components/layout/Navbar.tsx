@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import { wedding } from "@/data/wedding";
 
 const links = [
@@ -17,92 +17,172 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 30);
 
-    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
+
+  const closeMenu = () => setOpen(false);
+
   return (
     <>
       <motion.header
-        initial={{ y: -80 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.8 }}
-        className={`fixed left-0 top-0 z-50 w-full transition-all duration-500 ${
+        initial={{ opacity: 0, y: -15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
           scrolled
-            ? "border-b border-white/10 bg-white/70 backdrop-blur-2xl shadow-lg"
-            : "bg-transparent"
+            ? "border-b border-[#B9A184]/25 bg-[#F8F5EF]/95 text-[#29251F] shadow-[0_4px_30px_rgba(0,0,0,0.04)] backdrop-blur-xl"
+            : "border-b border-white/15 bg-black/10 text-white backdrop-blur-[2px]"
         }`}
       >
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
-          {/* Logo */}
+        <div className="mx-auto grid h-[76px] w-full max-w-[1800px] grid-cols-[1fr_auto] items-center gap-4 px-5 sm:h-[84px] sm:px-8 lg:grid-cols-[1fr_auto_1fr] lg:px-12 xl:px-20">
+          {/* LOGO */}
 
           <a
             href="#hero"
-            className={`font-heading text-2xl transition ${
-              scrolled ? "text-neutral-900" : "text-white"
-            }`}
+            onClick={closeMenu}
+            aria-label={`${wedding.bride} i ${wedding.groom} — strona główna`}
+            className="group flex w-fit min-w-0 items-center"
           >
-            {wedding.bride}
-            <span className="mx-2 text-[#C8A97E]">&</span>
-            {wedding.groom}
+            <span className="font-heading text-[21px] font-light tracking-[-0.055em] sm:text-2xl lg:text-[27px]">
+              {wedding.bride}
+            </span>
+
+            <span className="mx-1.5 font-serif text-xl italic text-[#C8A97E] sm:mx-2 sm:text-2xl">
+              &
+            </span>
+
+            <span className="font-heading text-[21px] font-light tracking-[-0.055em] sm:text-2xl lg:text-[27px]">
+              {wedding.groom}
+            </span>
           </a>
 
-          {/* Desktop */}
+          {/* MENU DESKTOPOWE */}
 
-          <nav className="hidden items-center gap-10 lg:flex">
+          <nav
+            aria-label="Nawigacja główna"
+            className="hidden items-center justify-center gap-7 lg:flex xl:gap-10"
+          >
             {links.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className={`text-sm uppercase tracking-[0.25em] transition hover:text-[#C8A97E] ${
-                  scrolled ? "text-neutral-700" : "text-white"
-                }`}
+                className="group relative whitespace-nowrap py-2 text-[10px] font-medium uppercase tracking-[0.19em] transition-colors duration-300 hover:text-[#B99B72] xl:text-[11px]"
               >
                 {link.label}
+
+                <span className="absolute bottom-0 left-0 h-px w-full origin-left scale-x-0 bg-[#B99B72] transition-transform duration-300 group-hover:scale-x-100" />
               </a>
             ))}
           </nav>
 
-          {/* Mobile */}
+          {/* PRZYCISK MENU MOBILNEGO */}
 
           <button
-            onClick={() => setOpen(!open)}
-            className={`lg:hidden ${scrolled ? "text-black" : "text-white"}`}
+            type="button"
+            onClick={() => setOpen((previous) => !previous)}
+            aria-label={open ? "Zamknij menu" : "Otwórz menu"}
+            aria-expanded={open}
+            aria-controls="mobile-navigation"
+            className="relative z-[70] flex h-11 w-11 items-center justify-center justify-self-end lg:hidden"
           >
-            {open ? <X size={30} /> : <Menu size={30} />}
+            <AnimatePresence mode="wait" initial={false}>
+              {open ? (
+                <motion.span
+                  key="close"
+                  initial={{ opacity: 0, rotate: -45 }}
+                  animate={{ opacity: 1, rotate: 0 }}
+                  exit={{ opacity: 0, rotate: 45 }}
+                  transition={{ duration: 0.15 }}
+                >
+                  <X size={25} strokeWidth={1.2} />
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="menu"
+                  initial={{ opacity: 0, rotate: 45 }}
+                  animate={{ opacity: 1, rotate: 0 }}
+                  exit={{ opacity: 0, rotate: -45 }}
+                  transition={{ duration: 0.15 }}
+                >
+                  <Menu size={25} strokeWidth={1.2} />
+                </motion.span>
+              )}
+            </AnimatePresence>
           </button>
         </div>
       </motion.header>
 
-      {/* Mobile Menu */}
+      {/* MENU MOBILNE */}
 
       <AnimatePresence>
         {open && (
-          <motion.div
-            initial={{ opacity: 0, x: "100%" }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "100%" }}
-            transition={{ duration: 0.35 }}
-            className="fixed inset-0 z-40 bg-white"
+          <motion.nav
+            id="mobile-navigation"
+            aria-label="Nawigacja mobilna"
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="fixed inset-0 z-[60] flex min-h-[100svh] flex-col items-center justify-center overflow-y-auto bg-[#F8F5EF] px-7 text-[#29251F] lg:hidden"
           >
-            <div className="flex h-full flex-col items-center justify-center gap-10">
-              {links.map((link) => (
-                <a
+            <p className="mb-3 text-[9px] uppercase tracking-[0.4em] text-[#A58A65]">
+              Nasza historia
+            </p>
+
+            <p className="text-center font-heading text-3xl font-light tracking-[-0.04em] sm:text-4xl">
+              {wedding.bride}
+              <span className="mx-2 font-serif italic text-[#B99B72]">&</span>
+              {wedding.groom}
+            </p>
+
+            <div className="my-8 h-px w-14 bg-[#B99B72]" />
+
+            <div className="flex w-full max-w-sm flex-col">
+              {links.map((link, index) => (
+                <motion.a
                   key={link.href}
                   href={link.href}
-                  onClick={() => setOpen(false)}
-                  className="font-heading text-4xl"
+                  onClick={closeMenu}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.35,
+                    delay: index * 0.07,
+                  }}
+                  className="flex items-center justify-between border-b border-[#B99B72]/25 py-5 font-heading text-2xl font-light transition-colors hover:text-[#A58A65]"
                 >
-                  {link.label}
-                </a>
+                  <span>{link.label}</span>
+
+                  <span className="text-xl font-light text-[#B99B72]">↗</span>
+                </motion.a>
               ))}
             </div>
-          </motion.div>
+
+            <p className="mt-10 text-center text-[9px] uppercase tracking-[0.3em] text-[#9A9082]">
+              Nasz wyjątkowy dzień · {wedding.weddingDate}
+            </p>
+          </motion.nav>
         )}
       </AnimatePresence>
     </>
