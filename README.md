@@ -1,36 +1,127 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Andzia Wedding 💍
 
-## Getting Started
+A modern and elegant wedding website built to provide guests with a beautiful online experience and a convenient way to share wedding memories.
 
-First, run the development server:
+🔗 **Live Demo:** [View Website](https://angelika-i-patryk-wedding.vercel.app)
+
+---
+
+## ✨ Project Overview
+
+Andzia Wedding is a wedding website designed with an elegant visual style and a focus on usability across desktop and mobile devices.
+
+The application allows guests to upload photos and videos directly through the website. Uploaded files are stored in Google Drive.
+
+The project is built with Next.js and TypeScript and deployed on Vercel.
+
+## 🚀 Features
+
+- Elegant, wedding-focused website design
+- Responsive user interface
+- Photo and video uploads
+- Google Drive integration for file storage
+- Google OAuth 2.0 integration for Google API access
+- Cloudflare Turnstile bot protection
+- Server-side file validation
+- Production deployment with Vercel
+
+## 🛠️ Tech Stack
+
+- **Framework:** Next.js
+- **Library:** React
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **Cloud Storage:** Google Drive API
+- **Authentication:** Google OAuth 2.0
+- **Bot Protection:** Cloudflare Turnstile
+- **Deployment:** Vercel
+- **Version Control:** Git and GitHub
+
+## ⚙️ Getting Started
+
+### Prerequisites
+
+- Node.js
+- npm
+- A Google Cloud project configured for Google Drive API access
+- A Cloudflare Turnstile widget
+
+### Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/AlexBialas/whitecode-wedding.git
+```
+
+Navigate to the project directory:
+
+```bash
+cd whitecode-wedding
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+### Environment Variables
+
+Create a `.env.local` file in the project root and configure the following variables:
+
+```env
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_DRIVE_FOLDER_ID=
+GOOGLE_PROJECT_ID=
+GOOGLE_REFRESH_TOKEN=
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=
+TURNSTILE_SECRET_KEY=
+```
+
+Fill in the values using your own configuration. Never publish actual credentials or secret values.
+
+### Run the Development Server
+
+Start the local development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🔐 Security
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The application uses Cloudflare Turnstile to help protect the upload endpoint against automated abuse.
 
-## Learn More
+Uploaded files are validated on the server for supported file types and individual file size limits.
 
-To learn more about Next.js, take a look at the following resources:
+Sensitive configuration is managed through environment variables.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Important:** Never commit `.env.local`, Google OAuth credentials, refresh tokens, or Turnstile secret keys to GitHub.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📂 Project Purpose
 
-## Deploy on Vercel
+This project demonstrates practical experience with:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Developing a full-stack web application
+- Building a responsive user interface
+- Integrating third-party APIs
+- Implementing server-side file uploads
+- Connecting an application to cloud storage
+- Integrating Google OAuth 2.0
+- Implementing bot protection
+- Managing environment variables
+- Deploying an application to a production environment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 👩‍💻 Created by
+
+**The White Code**
+
+Web development and digital solutions.
+
+---
+
+_Built with Next.js and TypeScript._
