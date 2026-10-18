@@ -8,6 +8,11 @@ const FOLDER_ID = process.env.GOOGLE_DRIVE_FOLDER_ID;
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
 const MAX_TOTAL_SIZE = 500 * 1024 * 1024;
 
+const ALLOWED_HOSTNAMES = new Set([
+  "localhost",
+  "angelika-i-patryk-wedding.vercel.app",
+]);
+
 const ALLOWED_TYPES = new Set([
   "image/jpeg",
   "image/png",
@@ -52,13 +57,15 @@ async function verifyTurnstile(token: string, req: NextRequest) {
       }
     );
 
-    if (!response.ok) return false;
+    if (!response.ok) {
+      return false;
+    }
 
     const result = await response.json();
 
     return (
       result.success === true &&
-      result.hostname === "localhost" &&
+      ALLOWED_HOSTNAMES.has(result.hostname) &&
       result.action === "upload"
     );
   } catch {
@@ -81,7 +88,9 @@ function getGoogleDrive() {
     "http://localhost:3000/api/auth/google/callback"
   );
 
-  auth.setCredentials({ refresh_token: refreshToken });
+  auth.setCredentials({
+    refresh_token: refreshToken,
+  });
 
   return google.drive({
     version: "v3",
@@ -95,14 +104,16 @@ export async function POST(req: NextRequest) {
 
     if (!contentType.includes("multipart/form-data")) {
       return NextResponse.json(
-        { success: false, message: "Nieprawidłowy format przesyłania." },
+        {
+          success: false,
+          message: "Nieprawidłowy format przesyłania.",
+        },
         { status: 415 }
       );
     }
 
     const formData = await req.formData();
 
-    // Weryfikacja Cloudflare przed zapisaniem pliku.
     const token = formData.get("turnstileToken");
 
     if (typeof token !== "string") {
@@ -132,7 +143,10 @@ export async function POST(req: NextRequest) {
 
     if (entries.length !== 1 || !(entries[0] instanceof File)) {
       return NextResponse.json(
-        { success: false, message: "Przesyłaj jeden plik w żądaniu." },
+        {
+          success: false,
+          message: "Przesyłaj jeden plik w żądaniu.",
+        },
         { status: 400 }
       );
     }
@@ -141,21 +155,30 @@ export async function POST(req: NextRequest) {
 
     if (file.size === 0 || file.size > MAX_FILE_SIZE) {
       return NextResponse.json(
-        { success: false, message: "Plik musi mieć rozmiar do 50 MB." },
+        {
+          success: false,
+          message: "Plik musi mieć rozmiar do 50 MB.",
+        },
         { status: 413 }
       );
     }
 
     if (!ALLOWED_TYPES.has(file.type)) {
       return NextResponse.json(
-        { success: false, message: "Ten format pliku nie jest obsługiwany." },
+        {
+          success: false,
+          message: "Ten format pliku nie jest obsługiwany.",
+        },
         { status: 415 }
       );
     }
 
     if (file.size > MAX_TOTAL_SIZE) {
       return NextResponse.json(
-        { success: false, message: "Przekroczono limit przesyłania." },
+        {
+          success: false,
+          message: "Przekroczono limit przesyłania.",
+        },
         { status: 413 }
       );
     }
